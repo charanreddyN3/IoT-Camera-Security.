@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Smart Surveillance Dashboard</title>
+
+
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="sidebar">
+
+<div class="logo">
+Guard Up
+</div>
+
+<ul>
+<li>📊 Dashboard</li>
+<li>📹 Live Feed</li>
+<li>🚨 Alerts</li>
+<li>🖼 Evidence</li>
+<li>⚙ Settings</li>
+</ul>
+
+</div>
+
+<div class="main">
+
+<div class="header">
+
+<h1>AI Powered Smart Surveillance System</h1>
+<br>
+
+<div class="search-container">
+
+<form method="GET">
+
+    <input
+        type="date"
+        name="search_date"
+        value="{{ search_date if search_date else '' }}"
+    >
+
+    <button type="submit" class="search-btn">
+        🔍 Search
+    </button>
+
+    <a href="/" class="clear-btn">
+        ❌ Clear
+    </a>
+
+</form>
+
+</div>
+<p>
+Real-Time Monitoring using YOLOv8
+</p>
+
+</div>
+
+<div class="cards">
+
+<div class="card">
+<h3>Total Events</h3>
+<h2>{{ events|length }}</h2>
+</div>
+
+<div class="card">
+<h3>Persons Detected</h3>
+<h2>{{ events|length }}</h2>
+</div>
+
+<div class="card">
+<h3>System Status</h3>
+<h2>Active</h2>
+</div>
+
+<div class="card">
+<h3>AI Model</h3>
+<h2>YOLOv8</h2>
+</div>
+
+<div class="card">
+    <h3>Last Detection</h3>
+    <h2>
+        {{ latest_event[2] if latest_event else 'N/A' }}
+    </h2>
+</div>
+
+</div>
+
+<div class="video-section">
+
+<h2>Live Surveillance Feed</h2>
+
+<br>
+
+<img src="{{ url_for('video_feed') }}">
+
+</div>
+
+<div class="graph-section">
+
+    <h2>Detection Statistics</h2>
+
+    <br>
+
+    <canvas id="detectionChart"></canvas>
+
+</div>
+<div class="gallery">
+
+<h2>Latest Evidence</h2>
+
+<br>
+
+<div class="gallery-images">
+
+{% for event in events %}
+
+{% if event[3] %}
+
+<a href="/{{ event[3] }}" target="_blank">
+    <img src="/{{ event[3] }}">
+</a>
+
+{% endif %}
+
+{% endfor %}
+
+</div>
+
+</div>
+
+<div class="table-section">
+
+<h2>Recent Alerts</h2>
+
+<br>
+
+<table>
+
+<tr>
+<th>ID</th>
+<th>Event</th>
+<th>Time</th>
+</tr>
+
+{% for event in events %}
+
+<tr>
+
+<td>{{ event[0] }}</td>
+<td>{{ event[1] }}</td>
+<td>{{ event[2] }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const ctx =
+document.getElementById(
+'detectionChart'
+);
+
+new Chart(ctx, {
+
+type: 'line',
+
+data: {
+
+labels: JSON.parse('{{ dates|tojson|safe }}'),
+
+datasets: [{
+
+label: 'Person Detections',
+
+data: JSON.parse('{{ counts|tojson|safe }}'),
+
+borderColor: '#22c55e',
+
+backgroundColor:
+'rgba(34,197,94,0.2)',
+
+fill: true,
+
+tension: 0.4
+
+}]
+
+}
+
+});
+
+</script>
+</body>
+
+</html>

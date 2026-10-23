@@ -1,0 +1,24 @@
+
+# Secrets
+.env
+.env.*
+
+# Python cache and virtual environments
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# Personal documents
+Desktop/
+*.pdf
+*.pptx
+*.docx
+
+# Generated data
+events.db
+evidence/
+static/evidence/
+
+# Editor files
+.vscode/
